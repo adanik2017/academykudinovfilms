@@ -100,7 +100,7 @@ jobs:
             cd /opt/kf-academy
 
             # Запускаем — каждый server.js с указанием рабочей директории корня monorepo
-            PORT=3000 pm2 start apps/landing/server.js --name kf-landing
+            PORT=4000 pm2 start apps/landing/server.js --name kf-landing
             PORT=3001 pm2 start apps/web/server.js --name kf-web
             PORT=3002 pm2 start apps/admin/server.js --name kf-admin
 
