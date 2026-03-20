@@ -2,8 +2,9 @@
 
 import { createBrowserClient } from '@supabase/ssr'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// В 'use client' t3-env не работает — клиентские переменные доступны через NEXT_PUBLIC_
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 
 function getSupabase() {
   return createBrowserClient(supabaseUrl, supabaseAnonKey)

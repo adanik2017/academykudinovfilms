@@ -15,7 +15,7 @@ export function BottomTabs() {
   const pathname = usePathname()
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[10002] hidden border-t border-white/5 bg-[rgba(8,8,10,0.96)] backdrop-blur-[24px] max-md:flex" style={{ paddingBottom: 'max(4px, env(safe-area-inset-bottom))' }}>
+    <div className="fixed inset-x-0 bottom-0 z-[10002] hidden border-t border-white/5 bg-[rgba(8,8,10,0.96)] pb-[max(4px,env(safe-area-inset-bottom))] backdrop-blur-[24px] max-md:flex">
       {tabs.map((tab) => {
         const isActive = pathname.startsWith(tab.href)
         const Icon = tab.icon

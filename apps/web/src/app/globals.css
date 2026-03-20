@@ -82,6 +82,7 @@ body::after {
 }
 .pbar-fill {
   height: 100%;
+  width: var(--progress, 0%);
   border-radius: 1px;
   position: relative;
   background: linear-gradient(90deg, #fff, var(--color-amber));

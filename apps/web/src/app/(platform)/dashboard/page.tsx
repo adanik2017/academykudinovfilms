@@ -97,7 +97,7 @@ export default async function DashboardPage() {
                 <h3 className="font-display text-[11px] font-semibold uppercase tracking-[0.03em] text-white/[0.58]">{a.name}</h3>
                 <p className="mt-1 line-clamp-1 text-[10px] text-white/[0.25]">{a.description}</p>
                 <div className="pbar mt-3">
-                  <div className="pbar-fill" style={{ width: '0%' }} />
+                  <div className="pbar-fill" style={{ '--progress': '0%' } as React.CSSProperties} />
                 </div>
               </div>
             ))}
@@ -123,7 +123,7 @@ export default async function DashboardPage() {
             <span>{xp} / 5 000 XP</span>
           </div>
           <div className="pbar mt-1.5">
-            <div className="pbar-fill" style={{ width: `${Math.min((xp / 5000) * 100, 100)}%` }} />
+            <div className="pbar-fill" style={{ '--progress': `${Math.min((xp / 5000) * 100, 100)}%` } as React.CSSProperties} />
           </div>
         </div>
 

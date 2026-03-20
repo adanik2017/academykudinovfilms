@@ -59,9 +59,7 @@ export function Evidence() {
             data-row
             className="flex items-center gap-8 border-b border-white/[0.04] py-10 opacity-0 translate-y-[30px] transition-all duration-600 max-sm:flex-col max-sm:gap-3 max-sm:text-center"
           >
-            <div className="min-w-[160px] text-right font-accent text-[clamp(80px,12vw,130px)] leading-[0.85] text-white/[0.08] transition-colors duration-600 max-sm:min-w-0 max-sm:text-center"
-              style={{ color: 'var(--color-amber)', textShadow: '0 0 80px rgba(232,146,74,0.2)' }}
-            >
+            <div className="min-w-[160px] text-right font-accent text-[clamp(80px,12vw,130px)] leading-[0.85] text-amber drop-shadow-[0_0_80px_rgba(232,146,74,0.2)] transition-colors duration-600 max-sm:min-w-0 max-sm:text-center">
               <span data-target={row.target}>0</span>
               {row.suffix && <span className="text-[0.5em] text-amber/70">{row.suffix}</span>}
             </div>

@@ -59,7 +59,7 @@ export async function Pricing() {
         Выберите подходящий формат обучения
       </p>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" style={{ perspective: '1200px' }}>
+      <div className="grid gap-5 [perspective:1200px] sm:grid-cols-2 lg:grid-cols-3">
         {tariffs.map((tariff) => {
           const defaultAccent = { border: 'border-t-amber', hoverShadow: '', btnHover: 'hover:bg-amber hover:text-black hover:border-amber', tabColor: 'text-amber/50' }
           const accent = accentColors[tariff.accent ?? 'amber'] ?? defaultAccent

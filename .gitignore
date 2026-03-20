@@ -36,3 +36,8 @@ test-results/
 
 # Misc
 *.tsbuildinfo
+
+# Video files
+*.mp4
+*.mov
+*.webm

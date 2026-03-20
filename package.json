@@ -11,11 +11,15 @@
     "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {
-    "turbo": "^2.5.0",
-    "prettier": "^3.5.0"
+    "prettier": "^3.5.0",
+    "turbo": "^2.5.0"
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "zod": "^4.3.6"
   }
 }

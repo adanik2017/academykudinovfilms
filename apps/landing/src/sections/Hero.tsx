@@ -23,7 +23,7 @@ export function Hero() {
           muted
           playsInline
           preload="metadata"
-          src="/video/dna-video.mp4"
+          src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/public-assets/video/dna-video.mp4`}
         />
         {/* Маска слева направо */}
         <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(to_right,#080808_0%,rgba(8,8,8,0.92)_18%,rgba(8,8,8,0.6)_38%,rgba(8,8,8,0.15)_55%,transparent_70%)]" />
@@ -63,11 +63,11 @@ export function Hero() {
       {/* Контент */}
       <div className="hero-content relative z-[2] max-w-[620px] px-5 py-[100px] pt-[180px] sm:pl-20">
         <div className="mb-11 flex items-center gap-2 font-display text-xs font-medium uppercase tracking-[0.2em] text-amber">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber shadow-[0_0_12px_var(--color-amber)]" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
+          <span className="h-1.5 w-1.5 animate-[pulse_2s_ease-in-out_infinite] rounded-full bg-amber shadow-[0_0_12px_var(--color-amber)]" />
           ACADEMY KUDINOV FILMS · 2026
         </div>
 
-        <h1 className="font-accent text-[clamp(64px,10vw,130px)] leading-[0.86] tracking-[0.04em] max-sm:text-[clamp(48px,14vw,80px)]" style={{ textShadow: '0 0 80px rgba(232,146,74,0.1)' }}>
+        <h1 className="font-accent text-[clamp(64px,10vw,130px)] leading-[0.86] tracking-[0.04em] drop-shadow-[0_0_80px_rgba(232,146,74,0.1)] max-sm:text-[clamp(48px,14vw,80px)]">
           СОЗДАВАЙ
           <br />
           КИНО

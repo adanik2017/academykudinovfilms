@@ -49,16 +49,16 @@ export async function Tools() {
           return (
             <div
               key={i}
-              className="rounded-[14px] border border-white/[0.06] bg-[linear-gradient(145deg,rgba(255,255,255,0.02),transparent),#0e0e0e] p-[18px]"
-              style={{ borderTopColor: tc, borderTopWidth: '2px' } as React.CSSProperties}
+              className="rounded-[14px] border border-white/[0.06] border-t-[2px] border-t-[var(--tc)] bg-[linear-gradient(145deg,rgba(255,255,255,0.02),transparent),#0e0e0e] p-[18px]"
+              style={{ '--tc': tc } as React.CSSProperties}
             >
-              <div className="mb-3 flex items-center gap-2 font-display text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: tc }}>
+              <div className="mb-3 flex items-center gap-2 font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--tc)]">
                 {cat.name}
               </div>
               <div className="flex flex-col gap-[5px]">
                 {cat.tools.map((tool, ti) => (
                   <div key={ti} className="flex items-center gap-1.5 border-b border-white/[0.03] py-1 text-[11px] text-white/50 last:border-b-0">
-                    <span className="h-1 w-1 flex-shrink-0 rounded-full" style={{ background: tc }} />
+                    <span className="h-1 w-1 flex-shrink-0 rounded-full bg-[var(--tc)]" />
                     {tool}
                   </div>
                 ))}

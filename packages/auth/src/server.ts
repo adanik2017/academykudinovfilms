@@ -1,8 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
 import type { SessionUser } from './types'
+import { env } from '@kf/db/env'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 interface CookieStore {
   getAll: () => { name: string; value: string }[]

@@ -15,8 +15,7 @@ export default function LandingPage() {
       {/* Scroll progress bar */}
       <div
         id="scrollProgress"
-        className="fixed top-[52px] left-0 z-[10001] h-0.5 bg-gradient-to-r from-amber to-yellow-400"
-        style={{ width: 0, transition: 'width .1s linear' }}
+        className="fixed top-[52px] left-0 z-[10001] h-0.5 w-0 bg-gradient-to-r from-amber to-yellow-400 transition-[width] duration-100"
       />
 
       <Nav />
