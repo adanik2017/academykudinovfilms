@@ -61,7 +61,8 @@ export async function Pricing() {
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" style={{ perspective: '1200px' }}>
         {tariffs.map((tariff) => {
-          const accent = accentColors[tariff.accent] || accentColors.amber
+          const defaultAccent = { border: 'border-t-amber', hoverShadow: '', btnHover: 'hover:bg-amber hover:text-black hover:border-amber', tabColor: 'text-amber/50' }
+          const accent = accentColors[tariff.accent ?? 'amber'] ?? defaultAccent
           const features = (tariff.features ?? []) as string[]
 
           return (
