@@ -29,24 +29,26 @@ jobs:
         run: |
           mkdir -p deploy
 
-          # Копируем всю standalone-структуру (содержит node_modules, apps, packages)
+          # Каждое приложение имеет свой standalone — мержим в одну папку
+          # Берём базу (node_modules, package.json) из landing
           cp -r apps/landing/.next/standalone/* deploy/
 
-          # Для каждого приложения копируем static и public
+          # Докопируем server.js и .next из web и admin
+          cp -r apps/web/.next/standalone/apps/web deploy/apps/web
+          cp -r apps/admin/.next/standalone/apps/admin deploy/apps/admin
+
+          # Копируем static assets и public для каждого
           for app in landing web admin; do
             mkdir -p deploy/apps/$app/.next/static
             cp -r apps/$app/.next/static/* deploy/apps/$app/.next/static/ 2>/dev/null || true
             cp -r apps/$app/public deploy/apps/$app/public 2>/dev/null || true
           done
 
-          # Env файл
-          cat > deploy/.env <<ENVEOF
-          NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
-          NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
-          SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY
-          ENVEOF
+          # Env
+          echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL" > deploy/.env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY" >> deploy/.env
+          echo "SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY" >> deploy/.env
 
-          # Архивируем
           tar -czf deploy.tar.gz -C deploy .
 
       - name: Copy to server
@@ -76,31 +78,31 @@ jobs:
             # PM2
             command -v pm2 >/dev/null 2>&1 || npm install -g pm2
 
-            # Распаковываем
+            # Распаковываем в новую папку
             rm -rf /opt/kf-academy-new
             mkdir -p /opt/kf-academy-new
             tar -xzf /tmp/deploy.tar.gz -C /opt/kf-academy-new
             rm -f /tmp/deploy.tar.gz
 
-            # Env для каждого приложения
+            # Env
             for app in landing web admin; do
               cp /opt/kf-academy-new/.env /opt/kf-academy-new/apps/$app/.env 2>/dev/null || true
             done
 
-            # Останавливаем старые
+            # Останавливаем старые процессы
             pm2 delete kf-landing 2>/dev/null || true
             pm2 delete kf-web 2>/dev/null || true
             pm2 delete kf-admin 2>/dev/null || true
 
-            # Заменяем старую версию
+            # Заменяем
             rm -rf /opt/kf-academy
             mv /opt/kf-academy-new /opt/kf-academy
-
-            # Запускаем
             cd /opt/kf-academy
-            PORT=3000 pm2 start apps/landing/server.js --name kf-landing --cwd /opt/kf-academy
-            PORT=3001 pm2 start apps/web/server.js --name kf-web --cwd /opt/kf-academy
-            PORT=3002 pm2 start apps/admin/server.js --name kf-admin --cwd /opt/kf-academy
+
+            # Запускаем — каждый server.js с указанием рабочей директории корня monorepo
+            PORT=3000 pm2 start apps/landing/server.js --name kf-landing
+            PORT=3001 pm2 start apps/web/server.js --name kf-web
+            PORT=3002 pm2 start apps/admin/server.js --name kf-admin
 
             pm2 save
             echo "Deploy complete!"
