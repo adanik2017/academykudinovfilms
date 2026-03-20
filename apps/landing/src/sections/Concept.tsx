@@ -1,29 +1,44 @@
 export function Concept() {
-  const features = [
-    { title: '4 академии', desc: 'Режиссура, операторское мастерство, саунд-дизайн, VFX' },
-    { title: '170+ уроков', desc: 'Видео, практика и проекты с реальными задачами' },
-    { title: 'Геймификация', desc: 'XP, фреймы, ранги, квесты — учиться интересно' },
-    { title: 'Комьюнити', desc: 'Лента работ, лайки, комментарии, обратная связь' },
-  ]
-
   return (
-    <section className="mx-auto max-w-5xl px-4 py-24">
-      <h2 className="text-center font-display text-2xl font-semibold uppercase tracking-wider md:text-3xl">
-        Концепция
+    <section className="mx-auto max-w-[1100px] px-10 py-20 text-center max-sm:px-5" id="concept">
+      <h2 className="font-display text-[clamp(28px,4vw,44px)] font-bold uppercase tracking-[0.02em]">
+        Это не курс. <span className="text-amber">Это Академия.</span>
       </h2>
-      <p className="mt-4 text-center text-sm font-light text-dim">
-        Первая онлайн-академия ИИ-кинопроизводства в России
+      <p className="mx-auto mt-4 mb-12 max-w-[640px] text-[15px] leading-[1.7] text-white/[0.32]">
+        Платформа, где обучение работает как игра — с рангами, рейтингом,
+        квестами и командами. Академии охватывают всё: от ИИ-кинопроизводства
+        и звука до языковых моделей и автоматизации.
       </p>
-      <div className="mt-12 grid gap-4 sm:grid-cols-2">
-        {features.map((f) => (
-          <div
-            key={f.title}
-            className="rounded-2xl border border-border-light bg-surface p-6"
-          >
-            <h3 className="font-display text-lg font-semibold uppercase tracking-wider text-amber">
-              {f.title}
-            </h3>
-            <p className="mt-2 text-sm font-light text-dim">{f.desc}</p>
+
+      {/* Ранги */}
+      <div className="mx-auto mb-12 flex max-w-[820px] items-center justify-center gap-0 overflow-x-auto max-sm:flex-wrap max-sm:gap-2">
+        {['Наблюдатель', 'Оператор', 'Режиссёр', 'Продюсер', 'Мастер', 'ИИ-Креатор'].map((rank, i) => (
+          <div key={rank} className="flex items-center">
+            <div className="flex flex-col items-center gap-1.5 px-5">
+              <div className={`h-3 w-3 rounded-full border-2 transition-all ${i <= 2 ? 'border-amber bg-amber shadow-[0_0_12px_rgba(232,146,74,0.4)]' : 'border-white/15 bg-white/[0.12]'}`} />
+              <span className={`font-display text-[10px] uppercase tracking-[0.1em] ${i <= 2 ? 'text-amber' : 'text-white/25'}`}>
+                {rank}
+              </span>
+            </div>
+            {i < 5 && <div className="h-px w-10 bg-white/10 max-sm:w-5" />}
+          </div>
+        ))}
+      </div>
+
+      {/* Фичи геймификации */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { icon: '⭐', title: 'XP и ранги', desc: 'Получай очки за уроки и поднимайся по рангам' },
+          { icon: '🎬', title: 'Фреймы', desc: 'Внутренняя валюта — обменивай на бонусы' },
+          { icon: '🔥', title: 'Стрики', desc: 'Не пропускай дни — наращивай серию' },
+          { icon: '🏆', title: 'Квесты', desc: 'Еженедельные задания с наградами' },
+        ].map((item) => (
+          <div key={item.title} className="card-cinema p-6 text-center">
+            <div className="mx-auto mb-3.5 flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-lg">
+              {item.icon}
+            </div>
+            <h3 className="mb-1.5 font-display text-[15px] font-semibold tracking-[0.03em]">{item.title}</h3>
+            <p className="text-xs leading-[1.6] text-white/[0.32]">{item.desc}</p>
           </div>
         ))}
       </div>

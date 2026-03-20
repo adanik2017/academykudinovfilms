@@ -1,28 +1,70 @@
-import { Button } from '@kf/ui'
+'use client'
+
+const stats = [
+  { value: '210', label: 'видеоуроков' },
+  { value: '5', label: 'академий' },
+  { value: '50', label: 'ИИ-инструментов' },
+  { value: '21', label: 'финальный проект' },
+]
 
 export function Hero() {
+  function scrollTo(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center px-4 pt-[var(--spacing-nav-height)] text-center">
-      <h1 className="font-display text-4xl font-bold uppercase tracking-wider md:text-6xl lg:text-7xl">
-        Создавай кино
-        <br />
-        <span className="text-amber">с помощью ИИ</span>
-      </h1>
-      <p className="mt-6 max-w-xl text-sm font-light leading-relaxed text-dim md:text-base">
-        Научись создавать фильмы с помощью нейросетей — Runway, Midjourney, Suno и десятков
-        других инструментов. От идеи до финального монтажа.
-      </p>
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <Button size="lg">
-          <a href="#pricing">Начать обучение</a>
-        </Button>
-        <Button variant="secondary" size="lg">
-          <a href="#program">Смотреть программу</a>
-        </Button>
+    <section className="relative flex min-h-screen items-center overflow-hidden" id="hero-top">
+      {/* Градиент снизу */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[200px] bg-gradient-to-t from-background to-transparent" />
+
+      {/* Амберный gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_65%_45%,rgba(232,146,74,0.08)_0%,transparent_60%)] mix-blend-screen" />
+
+      {/* Контент */}
+      <div className="relative z-[2] max-w-[620px] px-5 py-[100px] pt-[180px] sm:pl-20">
+        {/* Eyebrow */}
+        <div className="mb-11 flex items-center gap-2 font-display text-xs font-medium uppercase tracking-[0.2em] text-amber">
+          <span className="h-1.5 w-1.5 rounded-full bg-amber shadow-[0_0_12px_var(--color-amber)]" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
+          ACADEMY KUDINOV FILMS · 2026
+        </div>
+
+        {/* Заголовок */}
+        <h1 className="font-accent text-[clamp(64px,10vw,130px)] leading-[0.86] tracking-[0.04em] max-sm:text-[clamp(48px,14vw,80px)]" style={{ textShadow: '0 0 80px rgba(232,146,74,0.1)' }}>
+          СОЗДАВАЙ
+          <br />
+          КИНО
+          <span className="mt-4 block font-display text-[clamp(14px,2vw,22px)] font-medium uppercase tracking-[0.18em] text-white/[0.35]">
+            с помощью искусственного интеллекта
+          </span>
+        </h1>
+
+        <p className="mt-7 mb-10 max-w-[440px] text-[15px] font-light leading-[1.75] text-white/[0.35]">
+          5 академий. 210+ видеоуроков. Кино, звук, режиссура, языковые модели и
+          автоматизация. Геймификация и кураторы. Не курс — экосистема.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <button className="btn-primary" onClick={() => scrollTo('pricing')} type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <polygon points="5,3 19,12 5,21" />
+            </svg>
+            Вступить в Академию
+          </button>
+          <a href="#program" className="btn-ghost" onClick={(e) => { e.preventDefault(); scrollTo('program') }}>
+            Смотреть программу
+          </a>
+        </div>
       </div>
-      <p className="mt-12 text-[11px] font-light uppercase tracking-[0.2em] text-muted">
-        Поток 4 · Старт скоро
-      </p>
+
+      {/* Статистика внизу */}
+      <div className="absolute inset-x-0 bottom-0 z-[4] flex border-t border-white/5 bg-[rgba(8,8,8,0.6)] backdrop-blur-[12px] max-sm:flex-wrap">
+        {stats.map((s) => (
+          <div key={s.label} className="flex-1 border-r border-white/[0.04] px-4 py-[22px] text-center transition-colors hover:bg-white/[0.02] last:border-r-0 max-sm:flex-[1_1_45%] max-sm:border-b max-sm:border-white/[0.04]">
+            <span className="block font-display text-[28px] font-bold tracking-[0.02em]">{s.value}</span>
+            <span className="mt-1 text-[10px] uppercase tracking-[0.1em] text-white/25">{s.label}</span>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }

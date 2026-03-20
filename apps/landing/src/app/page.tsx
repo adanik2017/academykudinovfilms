@@ -8,7 +8,7 @@ import { Nav } from '@/sections/Nav'
 
 export default function LandingPage() {
   return (
-    <>
+    <div className="relative">
       <Nav />
       <main>
         <Hero />
@@ -18,6 +18,6 @@ export default function LandingPage() {
         <FAQ />
       </main>
       <Footer />
-    </>
+    </div>
   )
 }
