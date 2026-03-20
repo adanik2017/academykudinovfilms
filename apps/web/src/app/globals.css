@@ -6,9 +6,104 @@ html, body {
   background: var(--color-background);
   color: #fff;
   font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 13px;
   -webkit-font-smoothing: antialiased;
 }
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
+
+/* Виньетка */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+}
+
+/* Film grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 51;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px;
+}
+
+/* Карточки */
+.card-cinema {
+  position: relative;
+  background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.018) 35%, transparent 100%), #0d0d10;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top-color: rgba(255,255,255,0.14);
+  border-radius: 16px;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.4),
+    0 8px 28px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.09);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s;
+}
+.card-cinema::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse at 50% 120%, rgba(255,255,255,0.06) 0%, transparent 65%);
+  transition: opacity 0.5s;
+}
+.card-cinema:hover::after { opacity: 1; }
+.card-cinema:hover {
+  box-shadow:
+    0 0 20px 2px rgba(255,255,255,0.08),
+    0 0 50px 10px rgba(255,255,255,0.04),
+    0 2px 4px rgba(0,0,0,0.4),
+    0 8px 28px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.09);
+}
+.card-cinema > * { position: relative; z-index: 1; }
+
+/* Прогресс-бар с свечением */
+.pbar {
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255,255,255,0.08);
+  position: relative;
+  overflow: visible;
+}
+.pbar-fill {
+  height: 100%;
+  border-radius: 1px;
+  position: relative;
+  background: linear-gradient(90deg, #fff, var(--color-amber));
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pbar-fill::after {
+  content: '';
+  position: absolute;
+  right: -2.5px;
+  top: -1.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-amber);
+  box-shadow: 0 0 8px 2px rgba(232,146,74,0.5);
+}
+
+@media (max-width: 480px) {
+  body::before { background: none; }
+  body::after { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after { animation: none; }
+}

@@ -6,9 +6,34 @@ html, body {
   background: var(--color-background);
   color: #fff;
   font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 13px;
   -webkit-font-smoothing: antialiased;
 }
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
+
+/* Карточки */
+.card-cinema {
+  position: relative;
+  background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.018) 35%, transparent 100%), #0d0d10;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top-color: rgba(255,255,255,0.14);
+  border-radius: 16px;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.4),
+    0 8px 28px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.09);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s;
+}
+.card-cinema:hover {
+  box-shadow:
+    0 0 20px 2px rgba(255,255,255,0.08),
+    0 0 50px 10px rgba(255,255,255,0.04),
+    0 2px 4px rgba(0,0,0,0.4),
+    0 8px 28px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.09);
+}
+.card-cinema > * { position: relative; z-index: 1; }
