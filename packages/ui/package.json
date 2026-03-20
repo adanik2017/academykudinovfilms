@@ -22,7 +22,10 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/jest-dom": "^6.6.0",
     "@types/react": "^19.0.0",
+    "jsdom": "^25.0.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   }

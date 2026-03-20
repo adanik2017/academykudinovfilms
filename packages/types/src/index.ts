@@ -14,3 +14,5 @@ export type LessonType = 'video' | 'practice' | 'project' | 'test'
 export type PostType = 'homework' | 'film' | 'creative'
 
 export type EventType = 'lesson' | 'deadline' | 'call' | 'webinar' | 'quest'
+
+export * from './schemas'
