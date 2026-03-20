@@ -66,7 +66,7 @@ export default async function AdminDashboardPage() {
               return (
                 <div key={i} className="flex items-center justify-between border-b border-white/[0.04] py-2.5 last:border-b-0">
                   <span className="text-[11px] font-light text-white/[0.32]">{stat.label}</span>
-                  <span className={`font-display text-sm font-bold ${stat.color ?? ''}`}>{val}</span>
+                  <span className={`font-display text-[22px] font-bold tracking-[0.02em] ${stat.color ?? ''}`}>{val}</span>
                 </div>
               )
             })}
@@ -97,7 +97,7 @@ export default async function AdminDashboardPage() {
       {/* Quick Actions */}
       <div className="rounded-2xl border border-white/[0.08] bg-surface p-5">
         <p className="mb-3 text-[8px] font-normal uppercase tracking-[0.14em] text-white/[0.3]">Быстрые действия</p>
-        <div className="grid grid-cols-6 gap-2">
+        <div className="grid grid-cols-3 gap-2.5 mt-3.5">
           {QUICK_ACTIONS.map((action) => {
             const Icon = action.icon
             return (
