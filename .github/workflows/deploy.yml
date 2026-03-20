@@ -1,0 +1,56 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Deploy to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 5.129.203.13
+          username: root
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "apps/landing/.next,apps/web/.next,apps/admin/.next,package.json,pnpm-workspace.yaml,pnpm-lock.yaml,node_modules"
+          target: /opt/kf-academy
+
+      - name: Restart apps
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 5.129.203.13
+          username: root
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd /opt/kf-academy
+            # Устанавливаем PM2 если не установлен
+            command -v pm2 >/dev/null 2>&1 || npm install -g pm2
+            # Перезапускаем приложения
+            pm2 delete kf-landing 2>/dev/null || true
+            pm2 delete kf-web 2>/dev/null || true
+            pm2 delete kf-admin 2>/dev/null || true
+            cd apps/landing && pm2 start "npx next start -p 3000" --name kf-landing && cd ../..
+            cd apps/web && pm2 start "npx next start -p 3001" --name kf-web && cd ../..
+            cd apps/admin && pm2 start "npx next start -p 3002" --name kf-admin && cd ../..
+            pm2 save

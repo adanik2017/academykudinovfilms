@@ -1,0 +1,22 @@
+{
+  "name": "@kf/db",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./queries/*": "./src/queries/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "db:types": "supabase gen types typescript --project-id local > src/schema.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.0",
+    "@supabase/supabase-js": "^2.49.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

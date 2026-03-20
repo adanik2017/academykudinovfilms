@@ -1,0 +1,11 @@
+{
+  "name": "@kf/config",
+  "private": true,
+  "exports": {
+    "./eslint": "./eslint/index.mjs",
+    "./typescript/base": "./typescript/base.json",
+    "./typescript/nextjs": "./typescript/nextjs.json",
+    "./typescript/library": "./typescript/library.json",
+    "./tailwind/theme.css": "./tailwind/theme.css"
+  }
+}

@@ -1,0 +1,48 @@
+/* KF Academy — общая тема Tailwind CSS 4 */
+@theme {
+  /* Фон */
+  --color-background: #070709;
+  --color-surface: #0d0d10;
+  --color-surface-2: #161616;
+  --color-surface-3: #1a1a1a;
+
+  /* Акценты */
+  --color-amber: #e8924a;
+  --color-green: #5ecf7e;
+  --color-blue: #7eb8f7;
+  --color-red: #f27171;
+  --color-purple: #c97ef7;
+
+  /* Текст */
+  --color-muted: rgba(255, 255, 255, 0.35);
+  --color-dim: rgba(255, 255, 255, 0.45);
+  --color-mid: rgba(255, 255, 255, 0.7);
+
+  /* Бордеры */
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-light: rgba(255, 255, 255, 0.08);
+  --color-border-medium: rgba(255, 255, 255, 0.14);
+
+  /* Шрифты */
+  --font-display: 'Oswald', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-accent: 'Bebas Neue', sans-serif;
+
+  /* Layout */
+  --spacing-nav-height: 52px;
+  --spacing-sidebar-width: 56px;
+
+  /* Анимации */
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-slide-up: slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
