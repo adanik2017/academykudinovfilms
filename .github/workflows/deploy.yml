@@ -7,6 +7,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -22,35 +26,90 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-      - name: Deploy to server
+      # Собираем standalone-пакеты для деплоя
+      - name: Prepare deploy package
+        run: |
+          mkdir -p deploy/landing deploy/web deploy/admin
+
+          # Landing
+          cp -r apps/landing/.next/standalone/apps/landing/* deploy/landing/
+          cp -r apps/landing/.next/static deploy/landing/.next/static
+          cp -r apps/landing/public deploy/landing/public 2>/dev/null || true
+
+          # Web
+          cp -r apps/web/.next/standalone/apps/web/* deploy/web/
+          cp -r apps/web/.next/static deploy/web/.next/static
+          cp -r apps/web/public deploy/web/public 2>/dev/null || true
+
+          # Admin
+          cp -r apps/admin/.next/standalone/apps/admin/* deploy/admin/
+          cp -r apps/admin/.next/static deploy/admin/.next/static
+          cp -r apps/admin/public deploy/admin/public 2>/dev/null || true
+
+          # Копируем node_modules из standalone (маленький)
+          cp -r apps/landing/.next/standalone/node_modules deploy/node_modules 2>/dev/null || true
+          cp -r apps/landing/.next/standalone/package.json deploy/package.json 2>/dev/null || true
+
+          # Env файл
+          echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL" > deploy/.env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY" >> deploy/.env
+          echo "SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY" >> deploy/.env
+
+          # Архивируем
+          tar -czf deploy.tar.gz -C deploy .
+
+      - name: Copy to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 5.129.203.13
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "apps/landing/.next,apps/web/.next,apps/admin/.next,package.json,pnpm-workspace.yaml,pnpm-lock.yaml,node_modules"
-          target: /opt/kf-academy
+          source: deploy.tar.gz
+          target: /tmp
 
-      - name: Restart apps
+      - name: Deploy and restart
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 5.129.203.13
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd /opt/kf-academy
-            # Устанавливаем PM2 если не установлен
+            set -e
+
+            # Устанавливаем Node.js если нет
+            if ! command -v node &> /dev/null; then
+              curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+              apt-get install -y nodejs
+            fi
+
+            # Устанавливаем PM2 если нет
             command -v pm2 >/dev/null 2>&1 || npm install -g pm2
-            # Перезапускаем приложения
+
+            # Распаковываем
+            mkdir -p /opt/kf-academy
+            cd /opt/kf-academy
+            tar -xzf /tmp/deploy.tar.gz
+            rm /tmp/deploy.tar.gz
+
+            # Копируем env в каждое приложение
+            cp .env landing/.env 2>/dev/null || true
+            cp .env web/.env 2>/dev/null || true
+            cp .env admin/.env 2>/dev/null || true
+
+            # Перезапускаем приложения через PM2
             pm2 delete kf-landing 2>/dev/null || true
             pm2 delete kf-web 2>/dev/null || true
             pm2 delete kf-admin 2>/dev/null || true
-            cd apps/landing && pm2 start "npx next start -p 3000" --name kf-landing && cd ../..
-            cd apps/web && pm2 start "npx next start -p 3001" --name kf-web && cd ../..
-            cd apps/admin && pm2 start "npx next start -p 3002" --name kf-admin && cd ../..
+
+            cd /opt/kf-academy/landing
+            PORT=3000 pm2 start server.js --name kf-landing
+
+            cd /opt/kf-academy/web
+            PORT=3001 pm2 start server.js --name kf-web
+
+            cd /opt/kf-academy/admin
+            PORT=3002 pm2 start server.js --name kf-admin
+
             pm2 save
+            echo "Deploy complete!"
