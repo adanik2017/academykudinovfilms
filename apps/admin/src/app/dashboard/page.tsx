@@ -2,8 +2,25 @@ import { cookies } from 'next/headers'
 import { createServerSupabase } from '@kf/db'
 import { getUsers } from '@kf/db/queries/users'
 import { getAcademies } from '@kf/db/queries/academies'
-import { getTariffs } from '@kf/db/queries/tariffs'
-import { Users, DollarSign, TrendingUp, BookOpen, Activity, AlertTriangle } from 'lucide-react'
+import { Bell, Clock, CheckCircle, Download, Flame, Snowflake } from 'lucide-react'
+
+const COHORT_STATS = [
+  { label: 'Зачислено', value: '0' },
+  { label: 'Активных', value: '0', color: 'text-green' },
+  { label: 'В зоне риска', value: '0', color: 'text-amber' },
+  { label: 'Неактивных', value: '0', color: 'text-red' },
+  { label: 'Ср. прогресс', value: '0%', color: 'text-amber' },
+  { label: 'Дней до конца', value: '—' },
+]
+
+const QUICK_ACTIONS = [
+  { label: 'Напоминание', icon: Bell },
+  { label: 'Дедлайн', icon: Clock },
+  { label: 'Квест', icon: CheckCircle },
+  { label: 'Экспорт CSV', icon: Download },
+  { label: 'Burn-ивент', icon: Flame },
+  { label: 'Заморозка', icon: Snowflake },
+]
 
 export default async function AdminDashboardPage() {
   const cookieStore = await cookies()
@@ -11,91 +28,94 @@ export default async function AdminDashboardPage() {
 
   const { data: users } = await getUsers(supabase)
   const { data: academies } = await getAcademies(supabase)
-  const { data: tariffs } = await getTariffs(supabase)
 
   const students = users?.filter((u) => u.role === 'student') ?? []
   const totalStudents = students.length
-  const totalAcademies = academies?.length ?? 0
-  const totalTariffs = tariffs?.length ?? 0
-
-  // Данные для таблицы последних студентов
-  const recentStudents = students.slice(0, 5)
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="font-display text-xl font-semibold uppercase tracking-wider">Дашборд</h1>
-        <span className="text-[10px] text-white/25">{new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-      </div>
-
-      {/* KPI */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div className="flex flex-col gap-4 p-5">
+      {/* KPI Row — Oswald 36px как в старом проекте */}
+      <div className="grid grid-cols-4 gap-3">
         {[
-          { icon: Users, value: String(totalStudents), label: 'Студентов', delta: totalStudents > 0 ? `+${totalStudents}` : undefined, deltaType: 'up' as const, color: 'text-blue' },
-          { icon: DollarSign, value: '0 ₽', label: 'Выручка', color: 'text-green' },
-          { icon: TrendingUp, value: '0%', label: 'Конверсия', color: 'text-amber' },
-          { icon: BookOpen, value: String(totalAcademies), label: 'Академий', color: 'text-purple' },
-        ].map((kpi) => {
-          const Icon = kpi.icon
-          return (
-            <div key={kpi.label} className="rounded-xl border border-white/[0.08] bg-surface p-4">
-              <div className="mb-2 flex items-center gap-2">
-                <div className={`flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] ${kpi.color}`}>
-                  <Icon size={16} strokeWidth={1.5} />
-                </div>
-              </div>
-              <p className="font-display text-4xl font-bold tracking-[0.02em]">{kpi.value}</p>
-              <p className="mt-0.5 text-[10px] font-light uppercase tracking-[0.06em] text-white/[0.32]">{kpi.label}</p>
-              {kpi.delta && <p className="mt-1 text-[10px] text-green">{kpi.delta}</p>}
-            </div>
-          )
-        })}
+          { value: '0 ₽', label: 'Общая выручка', delta: 'Нет данных', up: true, color: 'text-green' },
+          { value: String(totalStudents), label: 'Студентов всего', delta: `${totalStudents} активных`, up: true },
+          { value: '0 ₽', label: 'Средний чек', delta: 'Нет данных', up: true, color: 'text-amber' },
+          { value: '0%', label: 'Чистая маржа', delta: 'Нет данных', up: true },
+        ].map((kpi) => (
+          <div key={kpi.label} className="rounded-2xl border border-white/[0.08] bg-surface p-5">
+            <p className={`font-display text-4xl font-bold tracking-[0.02em] leading-none ${kpi.color ?? ''}`}>{kpi.value}</p>
+            <p className="mt-1.5 text-[11px] font-light uppercase tracking-[0.1em] text-white/[0.32]">{kpi.label}</p>
+            <p className={`mt-2 flex items-center gap-1 text-[11px] font-light ${kpi.up ? 'text-green' : 'text-red'}`}>
+              {kpi.up ? '↑' : '↓'} {kpi.delta}
+            </p>
+          </div>
+        ))}
       </div>
 
-      {/* Две колонки */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        {/* Последние студенты */}
-        <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
-          <h2 className="mb-4 font-display text-sm font-semibold uppercase tracking-wider">Последние студенты</h2>
-          {recentStudents.length > 0 ? (
-            <div className="space-y-2">
-              {recentStudents.map((s) => (
-                <div key={s.id} className="flex items-center gap-3 rounded-lg bg-white/[0.02] p-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber/10 font-display text-[10px] font-semibold text-amber">
-                    {s.name.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2)}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs font-medium">{s.name}</p>
-                    <p className="text-[10px] text-white/25">{s.email}</p>
-                  </div>
-                  <span className="rounded bg-green/10 px-2 py-0.5 text-[9px] font-medium uppercase text-green">{s.role}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="py-4 text-center text-xs text-white/20">Нет студентов</p>
-          )}
-        </div>
-
-        {/* Быстрые действия */}
-        <div className="rounded-xl border border-white/[0.08] bg-surface p-5">
-          <h2 className="mb-4 font-display text-sm font-semibold uppercase tracking-wider">Алерты</h2>
-          <div className="space-y-2">
-            {[
-              { icon: AlertTriangle, text: 'ЮKassa не подключена — оплаты не принимаются', color: 'text-amber', bg: 'bg-amber/10 border-amber/20' },
-              { icon: Activity, text: `${totalTariffs} тариф(ов) настроено`, color: 'text-blue', bg: 'bg-blue/10 border-blue/20' },
-              { icon: BookOpen, text: `${totalAcademies} академий создано`, color: 'text-green', bg: 'bg-green/10 border-green/20' },
-            ].map((alert, i) => {
-              const AlertIcon = alert.icon
+      {/* Cohort + Alerts — side grid */}
+      <div className="grid grid-cols-2 gap-3">
+        {/* Текущий поток */}
+        <div className="rounded-2xl border border-white/[0.08] bg-surface p-5">
+          <p className="mb-3 text-[8px] font-normal uppercase tracking-[0.14em] text-white/[0.3]">Текущий поток</p>
+          <div className="space-y-0">
+            {COHORT_STATS.map((stat, i) => {
+              // Подставляем реальные данные
+              const val = stat.label === 'Зачислено' ? String(totalStudents)
+                : stat.label === 'Активных' ? String(totalStudents)
+                : stat.value
               return (
-                <div key={i} className={`flex items-center gap-3 rounded-lg border ${alert.bg} p-3`}>
-                  <AlertIcon size={16} className={alert.color} />
-                  <span className="text-xs font-light">{alert.text}</span>
+                <div key={i} className="flex items-center justify-between border-b border-white/[0.04] py-2.5 last:border-b-0">
+                  <span className="text-[11px] font-light text-white/[0.32]">{stat.label}</span>
+                  <span className={`font-display text-sm font-bold ${stat.color ?? ''}`}>{val}</span>
                 </div>
               )
             })}
           </div>
         </div>
+
+        {/* Алерты */}
+        <div className="rounded-2xl border border-white/[0.08] bg-surface p-5">
+          <p className="mb-3 text-[8px] font-normal uppercase tracking-[0.14em] text-white/[0.3]">Алерты</p>
+          <div className="space-y-2">
+            {[
+              { type: 'warn', text: 'ЮKassa не подключена', time: 'Требуется настройка', color: 'border-amber/20 bg-amber/[0.04]', dot: 'bg-amber' },
+              { type: 'info', text: `${academies?.length ?? 0} академий создано`, time: 'Контент-хаб', color: 'border-blue/20 bg-blue/[0.04]', dot: 'bg-blue' },
+              { type: 'info', text: `${totalStudents} студентов зарегистрировано`, time: 'Supabase Auth', color: 'border-green/20 bg-green/[0.04]', dot: 'bg-green' },
+            ].map((alert, i) => (
+              <div key={i} className={`flex items-start gap-3 rounded-lg border ${alert.color} p-3`}>
+                <span className={`mt-1 h-[5px] w-[5px] flex-shrink-0 rounded-full ${alert.dot}`} />
+                <div>
+                  <p className="text-xs">{alert.text}</p>
+                  <p className="mt-0.5 text-[10px] text-white/20">{alert.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="rounded-2xl border border-white/[0.08] bg-surface p-5">
+        <p className="mb-3 text-[8px] font-normal uppercase tracking-[0.14em] text-white/[0.3]">Быстрые действия</p>
+        <div className="grid grid-cols-6 gap-2">
+          {QUICK_ACTIONS.map((action) => {
+            const Icon = action.icon
+            return (
+              <button key={action.label} type="button" className="flex flex-col items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-white/[0.32] transition-all hover:border-white/10 hover:bg-white/[0.04] hover:text-white/60">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/[0.04]">
+                  <Icon size={16} strokeWidth={1.3} />
+                </div>
+                <span className="text-[10px] font-light">{action.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Все потоки */}
+      <div className="rounded-2xl border border-white/[0.08] bg-surface p-5">
+        <p className="mb-3 text-[8px] font-normal uppercase tracking-[0.14em] text-white/[0.3]">Все потоки</p>
+        <p className="py-6 text-center text-[13px] font-extralight text-white/[0.32]">Нет данных</p>
       </div>
     </div>
   )
