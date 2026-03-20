@@ -1,7 +1,6 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Client } from '../types'
 import type { Database } from '../schema'
 
-type Client = SupabaseClient<Database>
 
 export async function getUserByAuthId(supabase: Client, authId: string) {
   return supabase.from('users').select('*').eq('auth_id', authId).single()

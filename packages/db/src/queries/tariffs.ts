@@ -1,7 +1,6 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Client } from '../types'
 import type { Database } from '../schema'
 
-type Client = SupabaseClient<Database>
 
 export async function getTariffs(supabase: Client) {
   return supabase.from('tariffs').select('*').order('order')

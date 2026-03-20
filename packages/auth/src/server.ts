@@ -1,15 +1,19 @@
 import { createServerClient } from '@supabase/ssr'
-import type { cookies } from 'next/headers'
 import type { SessionUser } from './types'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-function createSupabase(cookieStore: Awaited<ReturnType<typeof cookies>>) {
+interface CookieStore {
+  getAll: () => { name: string; value: string }[]
+  set: (name: string, value: string, options?: Record<string, unknown>) => void
+}
+
+function createSupabase(cookieStore: CookieStore) {
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll: () => cookieStore.getAll(),
-      setAll: (cookiesToSet) => {
+      setAll: (cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) => {
         cookiesToSet.forEach(({ name, value, options }) => {
           try {
             cookieStore.set(name, value, options)
@@ -22,9 +26,7 @@ function createSupabase(cookieStore: Awaited<ReturnType<typeof cookies>>) {
   })
 }
 
-export async function getSession(
-  cookieStore: Awaited<ReturnType<typeof cookies>>,
-): Promise<SessionUser | null> {
+export async function getSession(cookieStore: CookieStore): Promise<SessionUser | null> {
   const supabase = createSupabase(cookieStore)
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
@@ -38,11 +40,11 @@ export async function getSession(
   if (!profile) return null
 
   return {
-    id: profile.id,
+    id: profile.id as string,
     authId: user.id,
-    email: profile.email,
-    name: profile.name,
+    email: profile.email as string,
+    name: profile.name as string,
     role: profile.role as SessionUser['role'],
-    avatarUrl: profile.avatar_url,
+    avatarUrl: profile.avatar_url as string | null,
   }
 }

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Button } from '@kf/ui'
 
 export function Nav() {
   return (
@@ -23,9 +22,12 @@ export function Nav() {
             FAQ
           </a>
         </div>
-        <Button size="sm" asChild>
-          <a href="http://localhost:3001/login">Войти</a>
-        </Button>
+        <a
+          href="http://localhost:3001/login"
+          className="inline-flex h-8 items-center rounded-lg bg-amber px-3 text-xs font-medium text-black hover:bg-amber/90"
+        >
+          Войти
+        </a>
       </div>
     </nav>
   )

@@ -39,7 +39,7 @@ export async function Pricing() {
             </p>
             <p className="text-xs text-muted">{tariff.period}</p>
             <ul className="mt-6 space-y-2">
-              {tariff.features?.map((feature, i) => (
+              {tariff.features?.map((feature: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-sm font-light text-dim">
                   <span className="mt-0.5 text-amber">✓</span>
                   {feature}

@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { createServerSupabase } from '@kf/db'
+import type { Module } from '@kf/db'
 import { getSession } from '@kf/auth/server'
 import { getAcademies } from '@kf/db/queries/academies'
 import { getModulesByAcademy } from '@kf/db/queries/modules'
@@ -50,7 +51,7 @@ export default async function ProgramPage() {
 
               {academy.modules.length > 0 && (
                 <div className="mt-4 space-y-2">
-                  {academy.modules.map((mod, i) => (
+                  {academy.modules.map((mod: Module, i: number) => (
                     <div key={mod.id} className="flex items-center gap-3 rounded-lg bg-white/[0.02] p-3">
                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white/5 text-[10px] font-medium text-muted">
                         {i + 1}

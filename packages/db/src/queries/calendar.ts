@@ -1,7 +1,6 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Client } from '../types'
 import type { Database } from '../schema'
 
-type Client = SupabaseClient<Database>
 
 export async function getCalendarEvents(supabase: Client, month: number, year: number) {
   const startDate = `${year}-${String(month + 1).padStart(2, '0')}-01`

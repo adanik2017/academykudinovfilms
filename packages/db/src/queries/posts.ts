@@ -1,7 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '../schema'
+import type { Client } from '../types'
 
-type Client = SupabaseClient<Database>
 
 export async function getPosts(supabase: Client, limit = 20) {
   return supabase
