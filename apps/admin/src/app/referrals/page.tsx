@@ -8,7 +8,7 @@ export default function ReferralsPage() {
       <div className="grid grid-cols-3 gap-3">
         {[{v:'0',l:'Всего рефералов'},{v:'0',l:'Активных'},{v:'0 ₽',l:'Заработано'}].map(k=>(
           <div key={k.l} className="rounded-xl border border-white/[0.08] bg-surface p-4 text-center">
-            <p className="font-display text-2xl font-bold text-white/[0.32]">{k.v}</p>
+            <p className="font-display text-4xl font-bold tracking-[0.02em] text-white/[0.32]">{k.v}</p>
             <p className="mt-1 text-[10px] uppercase tracking-wider text-white/25">{k.l}</p>
           </div>
         ))}

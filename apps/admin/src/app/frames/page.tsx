@@ -8,7 +8,7 @@ export default function FramesPage() {
       <div className="grid grid-cols-3 gap-3">
         {[{v:'0',l:'В обороте'},{v:'0',l:'Эмиссия / нед'},{v:'0',l:'Сжигание / нед'}].map(m=>(
           <div key={m.l} className="rounded-xl border border-white/[0.08] bg-surface p-4 text-center">
-            <p className="font-display text-2xl font-bold text-white/[0.32]">{m.v}</p>
+            <p className="font-display text-4xl font-bold tracking-[0.02em] text-white/[0.32]">{m.v}</p>
             <p className="mt-1 text-[10px] uppercase tracking-wider text-white/25">{m.l}</p>
           </div>
         ))}

@@ -44,7 +44,7 @@ export default async function AdminDashboardPage() {
                   <Icon size={16} strokeWidth={1.5} />
                 </div>
               </div>
-              <p className="font-display text-2xl font-bold">{kpi.value}</p>
+              <p className="font-display text-4xl font-bold tracking-[0.02em]">{kpi.value}</p>
               <p className="mt-0.5 text-[10px] font-light uppercase tracking-[0.06em] text-white/[0.32]">{kpi.label}</p>
               {kpi.delta && <p className="mt-1 text-[10px] text-green">{kpi.delta}</p>}
             </div>

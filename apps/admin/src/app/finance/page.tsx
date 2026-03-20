@@ -27,7 +27,7 @@ export default function FinancePage() {
               <div className={`mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] ${kpi.color}`}>
                 <Icon size={16} strokeWidth={1.5} />
               </div>
-              <p className={`font-display text-2xl font-bold ${kpi.color}`}>{kpi.value}</p>
+              <p className={`font-display text-4xl font-bold tracking-[0.02em] ${kpi.color}`}>{kpi.value}</p>
               <p className="mt-0.5 text-[10px] uppercase tracking-wider text-white/[0.32]">{kpi.label}</p>
               <p className={`mt-1 text-[10px] ${kpi.up ? 'text-green' : 'text-red'}`}>{kpi.up ? '↑' : '↓'} {kpi.delta}</p>
             </div>
