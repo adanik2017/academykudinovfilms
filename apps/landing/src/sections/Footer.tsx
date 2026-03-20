@@ -35,6 +35,16 @@ export function Footer() {
           </p>
         </div>
       </footer>
+      {/* Telegram */}
+      <a
+        href="#"
+        className="fixed bottom-7 right-7 z-[99] flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gradient-to-br from-[#2AABEE] to-[#229ED9] shadow-[0_4px_20px_rgba(42,171,238,0.3),0_0_40px_rgba(42,171,238,0.1)] transition-all hover:-translate-y-[3px] hover:scale-105 hover:shadow-[0_6px_30px_rgba(42,171,238,0.4),0_0_60px_rgba(42,171,238,0.15)] max-sm:bottom-5 max-sm:right-5 max-sm:h-12 max-sm:w-12"
+        aria-label="Написать в Telegram"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff">
+          <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z" />
+        </svg>
+      </a>
     </>
   )
 }
